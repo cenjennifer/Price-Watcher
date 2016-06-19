@@ -1,20 +1,38 @@
 <html ng-app="TrackPriceApp" ng-csp>
 
 <head>
-    <script src="node_modules/jquery/dist/jquery.js"></script>
-    <script type="text/javascript" src="highlight.js"></script>
-    <link rel="stylesheet" href="index.css">
+    <script src="node_modules/jquery-2.0.3.min.js"></script>
+    <script src="node_modules//bootstrap.min.js"></script>
     <script src="node_modules/angular/angular.js"></script>
     <script src="../js/app.js"></script>
     <script src="../js/cart.factory.js"></script>
     <script src="../js/cart.controller.js"></script>
+    <script type="text/javascript" src="highlight.js"></script>
+    <link rel="stylesheet" href="node_modules/bootstrap.min.css" media="screen">
+    <link rel="stylesheet" href="index.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
 </head>
 
 <body ng-controller="getPage">
-    <div ng-repeat="item in db">
-        <div ng-bind="item.selectedPrice"></div>
-        <div ng-bind="item.url" ng-click="gotolink(item.url)"></div>
-    </div>
+    <div class="container">
+        <div ng-repeat="(key, value) in db">
+            <div class="eachWatch">
+                <div class="icons" style="float:left">
+                    <img src="{{db[key][0].icon}}">
+                    <br>
+                    <button type="button" class="btn btn-secondary btn-sm" ng-click="gotolink(key)">LINK</button>
+                </div>
+                <!-- Text Name -->
+                <div class="text">
+                    <div class="itemName" ng-bind="db[key][0].selection[0].words[0]"></div>
+                    <div style="font-size:10px; color:grey; padding: 0; margin: 0;">{{db[key][0].date | date:'medium'}}</div>
+                    <!-- Price Selected -->
+                    <div ng-bind="db[key][0].selection[0].price[0]"></div>
+                </div>
+                <div ng-click="delete(key)"><img src="close.png"></div>
+                <div style="clear:both"></div>
+            </div>
+        </div>
 </body>
 
 </html>

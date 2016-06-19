@@ -1,18 +1,25 @@
 function getStorage() {
     var p = new Promise(function(resolve, reject) {
-        return chrome.storage.local.get({ pageInfo: [] }, (response) => resolve(response.pageInfo));
+        return chrome.storage.local.get(null, (response) => resolve(response.pageInfo));
     });
     return p;
 }
 
 function checkForExistingUrl(data, url) {
-    console.log(data);
-    for (var i = 0; i < data.length; i++) {
-        if (Object.keys(data[i]) === url) {
-            return index + 1; // 0 is false
+    for (key in data[0]) {
+        if (key === url) {
+            return true;
         }
     }
     return false;
+}
+
+function pushPriceOrText(array, select) {
+    if (select[0] === '$') {
+        array[0].selection[0].price.unshift(select);
+    } else {
+        array[0].selection[0].words.push(select);
+    }
 }
 
 function addToStorage(selection, url, icon) {
@@ -21,13 +28,25 @@ function addToStorage(selection, url, icon) {
             return res;
         })
         .then((res) => {
-            let check = checkForExistingUrl(res, url);
-            if (check) {
-                res[check - 1][url][0].selection.push(selection);
+            var data = [{
+                "selection": [{ 'words': [], 'price': [] }],
+                "icon": icon,
+                "date": Date.now()
+            }];
+            var obj = {};
+            obj[url] = data;
+
+            if (!res) {
+                pushPriceOrText(data, selection);
+                chrome.storage.local.set({ pageInfo: [obj] });
             } else {
-                var newObj = {};
-                newObj[url] = [{ "selection": [selection] }, { "icon": icon }, { "url": url }];
-                res.push(newObj);
+                let check = checkForExistingUrl(res, url);
+                if (check) {
+                    pushPriceOrText(res[0][url], selection);
+                } else {
+                    pushPriceOrText(data, selection);
+                    res[0][url] = data;
+                }
             }
             chrome.storage.local.set({ pageInfo: res });
             chrome.browserAction.setBadgeText({ text: "+" });
@@ -51,8 +70,14 @@ chrome.runtime.onInstalled.addListener(function() {
     var context = "selection";
     var id = chrome.contextMenus.create({
         "title": title,
-        "contexts": [context],
+        "contexts": ["all"],
         "id": "context" + context
     });
-    // alert("Extension Menu Activated");
 });
+
+// chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+
+//     if (message.popupOpen) {
+//         chrome.browserAction.setBadgeText({ text: "" });
+//     }
+// });
