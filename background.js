@@ -50,6 +50,7 @@ function addToStorage(selection, url, icon) {
             }
             chrome.storage.local.set({ pageInfo: res });
             chrome.browserAction.setBadgeText({ text: "+" });
+            chrome.browserAction.setBadgeBackgroundColor({ color: "#ffb467" });
             setTimeout(function() {
                 chrome.browserAction.setBadgeText({ text: "" });
             }, 1000);
@@ -75,9 +76,13 @@ chrome.runtime.onInstalled.addListener(function() {
     });
 });
 
-// chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+    if (message.changed) {
+        chrome.browserAction.setBadgeText({ text: "$" });
+        chrome.browserAction.setBadgeBackgroundColor({ color: "#bf0000" });
+    }
+});
 
-//     if (message.popupOpen) {
-//         chrome.browserAction.setBadgeText({ text: "" });
-//     }
-// });
+chrome.tabs.onUpdated.addListener(function() {
+    chrome.browserAction.setBadgeText({ text: "" });
+});

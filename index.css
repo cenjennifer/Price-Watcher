@@ -1,5 +1,4 @@
 body {
-    height: 300px;
     width: 300px;
     padding: 10px;
     font-family: 'Abel', sans-serif;
@@ -12,7 +11,8 @@ body {
     padding: 3px;
 }
 
-.btn-sm {
+
+/*.btn-sm {
     padding: 2px 4px;
 }
 
@@ -33,10 +33,16 @@ body {
     -webkit-box-shadow: none;
     box-shadow: none;
 }
+*/
+
+.icon {
+    float: left;
+    margin-top: 13px;
+}
 
 img {
     align: center;
-    max-width: 26px;
+    max-width: 28px;
     padding: 0px 0px 3px 6px;
 }
 
@@ -47,7 +53,7 @@ img {
 }
 
 .text div:nth-child(1) {
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .text {
@@ -58,7 +64,7 @@ img {
 }
 
 .itemName {
-    text-transform: capitalize;
+    /*   text-transform: capitalize;*/
 }
 
 .text div:last-child {
@@ -70,10 +76,19 @@ img {
     font-style: italic;
 }
 
-.eachWatch > div:nth-last-child(2){
+.eachWatch > div:nth-last-child(2) {
     float: right;
 }
 
-.eachWatch div:nth-last-child(2) img{
-    width: 90%;
+.eachWatch div:nth-last-child(2) img:nth-child(1) {
+    max-width: 24px;
+    margin-top: -39px;
+}
+
+.eachWatch div:nth-last-child(2) img:nth-child(2) {
+    margin-top: -40px;
+}
+
+.eachWatch div:nth-last-child(2) img:hover {
+    border: 1px solid #eef5f8;
 }
