@@ -1,0 +1,27 @@
+{
+  "name": "pricewatcher",
+  "version": "1.0.0",
+  "description": "",
+  "main": "background.js",
+  "dependencies": {
+    "angular": "^1.5.7",
+    "bootstrap": "^3.3.6",
+    "browserify": "^13.0.1",
+    "jquery": "^3.0.0",
+    "lodash": "^4.13.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "build": "browserify main.js -o bundle.js && browserify popup-frontend/app.js -o popup-frontend/bundle.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cenjennifer/Price-Watcher.git"
+  },
+  "author": "Jennifer Cen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cenjennifer/Price-Watcher/issues"
+  },
+  "homepage": "https://github.com/cenjennifer/Price-Watcher#readme"
+}
