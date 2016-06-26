@@ -1,4 +1,4 @@
-<html ng-app="TrackPriceApp" ng-csp>
+<html ng-app="TrackPriceApp">
 
 <head>
     <script src="node_modules/jquery-2.0.3.min.js"></script>
@@ -17,10 +17,9 @@
     <div class="container">
         <div ng-repeat="(key, value) in db">
             <div class="eachWatch">
-                <div class="icons" style="float:left">
+                <div class="logo">
                     <img src="{{db[key][0].icon}}">
                     <br>
-                    <button type="button" class="btn btn-secondary btn-sm" ng-click="gotolink(key)">LINK</button>
                 </div>
                 <!-- Text Name -->
                 <div class="text">
@@ -29,7 +28,10 @@
                     <!-- Price Selected -->
                     <div ng-bind="db[key][0].selection[0].price[0]"></div>
                 </div>
-                <div ng-click="delete(key)"><img src="close.png"></div>
+                <div class="icons">
+                    <img ng-click="gotolink(key)" src="img/open.png">
+                    <img ng-click="delete(key)" src="img/trash.png">
+                </div>
                 <div style="clear:both"></div>
             </div>
         </div>

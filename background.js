@@ -1,25 +1,26 @@
+'use strict';
+let browser = chrome.browserAction;
+let storage = chrome.storage.local;
+
 function getStorage() {
-    var p = new Promise(function(resolve, reject) {
-        return chrome.storage.local.get(null, (response) => resolve(response.pageInfo));
+    let p = new Promise(function(resolve, reject) {
+        return storage.get(null, (response) => resolve(response.pageInfo));
     });
     return p;
 }
 
 function checkForExistingUrl(data, url) {
-    for (key in data[0]) {
+    _.forIn(data[0], function(key) {
         if (key === url) {
             return true;
         }
-    }
+    });
     return false;
 }
 
 function pushPriceOrText(array, select) {
-    if (select[0] === '$') {
-        array[0].selection[0].price.unshift(select);
-    } else {
-        array[0].selection[0].words.push(select);
-    }
+    let itemContentHolder = array[0].selection[0];
+    select[0] === '$' ? itemContentHolder.price.unshift(select) : itemContentHolder.words.push(select);
 }
 
 function addToStorage(selection, url, icon) {
@@ -28,56 +29,60 @@ function addToStorage(selection, url, icon) {
             return res;
         })
         .then((res) => {
-            var data = [{
+            let data = [{
                 "selection": [{ 'words': [], 'price': [] }],
                 "icon": icon,
                 "date": Date.now()
             }];
-            var obj = {};
+            let obj = {};
             obj[url] = data;
 
             if (!res) {
                 pushPriceOrText(data, selection);
-                chrome.storage.local.set({ pageInfo: [obj] });
+                storage.set({ pageInfo: [obj] });
             } else {
-                let check = checkForExistingUrl(res, url);
-                if (check) {
+                if (checkForExistingUrl(res, url)) {
                     pushPriceOrText(res[0][url], selection);
                 } else {
                     pushPriceOrText(data, selection);
                     res[0][url] = data;
                 }
             }
-            chrome.storage.local.set({ pageInfo: res });
-            chrome.browserAction.setBadgeText({ text: "+" });
+            storage.set({ pageInfo: res });
+            browser.setBadgeText({ text: "+" });
+            browser.setBadgeBackgroundColor({ color: "#ffb467" });
             setTimeout(function() {
-                chrome.browserAction.setBadgeText({ text: "" });
+                browser.setBadgeText({ text: "" });
             }, 1000);
         });
 }
 
 function onClickHandler(info, tab) {
-    var selection = info.selectionText;
-    var icon = tab.favIconUrl;
-    var url = tab.url;
+    let selection = info.selectionText;
+    let icon = tab.favIconUrl;
+    let url = tab.url;
     addToStorage(selection, url, icon);
 }
 
 chrome.contextMenus.onClicked.addListener(onClickHandler);
 
 chrome.runtime.onInstalled.addListener(function() {
-    var title = "Price Tracker";
-    var context = "selection";
-    var id = chrome.contextMenus.create({
+    const title = "Price Tracker";
+    const context = "selection";
+    const id = chrome.contextMenus.create({
         "title": title,
         "contexts": ["all"],
         "id": "context" + context
     });
 });
 
-// chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+    if (message.changed) {
+        browser.setBadgeText({ text: "$" });
+        browser.setBadgeBackgroundColor({ color: "#bf0000" });
+    }
+});
 
-//     if (message.popupOpen) {
-//         chrome.browserAction.setBadgeText({ text: "" });
-//     }
-// });
+chrome.tabs.onUpdated.addListener(function() {
+    browser.setBadgeText({ text: "" });
+});

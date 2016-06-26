@@ -1,35 +1,34 @@
 {
     "manifest_version": 2,
 
-    "name": "Price Tracker",
+    "name": "Price Spy",
     "description": "This extension tracks the change in price for watched items",
     "version": "1.0",
     "permissions": [
         "*://*/*",
         "contextMenus",
-        "activeTab",
-        "background", //if you need the browser to start up early
+        "background",
         "tabs",
-        "storage"
+        "storage",
+        "activeTab"
     ],
     "icons": {
-
         "32" : "img/search32.png",
         "48" : "img/search48.png",
         "128": "img/search128.png"
     },
     "browser_action": {
         "default_icon": "img/search32.png",
-        "default_popup": "popup.html"
+        "default_popup": "./popup-frontend/popup.html"
     },
     "background": {
-        "scripts": ["background.js", "node_modules/jquery-2.0.3.min.js", "node_modules/angular/angular.js", "node_modules/bootstrap.min.js"]
+        "scripts": ["bundle.js", "background.js"]
     },
     "content_scripts": [{ //how you interact with content loaded into the browser 
         "matches": ["*://*/*"],
-        "js": ["highlight.js", "script.js"],
-        "run_at": "document_start",
-        "all_frames": true
+        "js": ["./popup-frontend/bundle.js"],
+        "all_frames": true,
+        "run_at": "document_end"
     }],
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
